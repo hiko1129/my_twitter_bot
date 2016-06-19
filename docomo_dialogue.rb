@@ -7,13 +7,15 @@ API_KEY = 'YOUR_API_KEY'
 
 class Bot
   def initialize
-    @utt = nil
-    @context = nil
-    @mode = nil
+    @utt = nil # ユーザの発話を指定(255文字以下)
+    @context = nil # コンテキストIDを指定(255文字以下)
+    # ※会話(しりとり)を継続する場合は、レスポンスボディのcontextの値を指定する
+    @mode = nil # ※会話(しりとり)を継続する場合は、レスポンスボディのmodeの値を指定する
     @uri = URI.parse(DOCOMO_DIALOGUE_URL)
-    @uri.query = 'APIKEY=' + API_KEY
+    @uri.query = 'APIKEY=' + API_KEY # クエリ文字列をつけている
   end
 
+  # ユーザーの発話を受け取り、雑談対話APIの発話を返す
   def talk(utt)
     @utt = utt
     res = connect()
@@ -23,6 +25,7 @@ class Bot
   end
 
   private
+  # 雑談対話APIとのやりとり
   def connect
     body = {}
     body[:utt] = @utt
