@@ -31,9 +31,3 @@ client_stream.user do |object|
     # ダイレクトメッセージにも対応させるかも
   end
 end
-
-
-# test
-puts 'input your tweet'
-input = gets.chomp
-client_rest.update(input)
