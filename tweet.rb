@@ -5,6 +5,7 @@ CONSUMER_KEY = 'YOUR_CONSUMER_KEY'
 CONSUMER_SECRET = 'YOUR_CONSUMER_SECRET'
 ACCESS_TOKEN = 'YOUR_ACCESS_TOKEN'
 ACCESS_TOKEN_SECRET = 'YOUR_ACCESS_TOKEN_SECRET'
+MY_USERNAME = 'YOUR_TWITTER_USERNAME'
 
 bot = Bot.new
 
@@ -22,11 +23,15 @@ client_stream = Twitter::Streaming::Client.new do |config|
   config.access_token_secret = ACCESS_TOKEN_SECRET
 end
 
+
 client_stream.user do |object|
   if object.is_a?(Twitter::Tweet)
-    # TO DO 自分のツイートでなければリプライする（screen_nameを使用すればよいかは不明、試し）
-    if object.user.screen_name != 'YOUR_SCREEN_NAME'
-      client_rest.update("@#{object.user.screen_name} #{bot.talk(object.text)}", options = { in_reply_to_status_id: object.id })
+    username = object.user.screen_name
+    tweet = object.text
+    tweet_id = object.id
+    # 自分のツイートでない場合、Botがリプライする
+    if username != MY_USERNAME
+      client_rest.update("@#{username} #{bot.talk(tweet)}", { in_reply_to_status_id: tweet_id })
     end
     # ダイレクトメッセージにも対応させるかも
   end
