@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'bundler/setup'
 require 'twitter'
 require 'docomoru'
 
@@ -31,9 +32,11 @@ stream_client.user do |object|
     tweet_id = object.id
     # 自分のツイートでない場合、Botがリプライする
     if username != MY_USERNAME
-      response = docomoru_client.create_dialogue(tweet)
-      rest_client.update("@#{username} #{response.body['utt']}",
-                         in_reply_to_status_id: tweet_id)
+      rest_client.update(
+        "@#{username} #{docomoru_client.create_dialogue(tweet).body['utt']}",
+        in_reply_to_status_id: tweet_id
+      )
     end
+    sleep(4)
   end
 end
